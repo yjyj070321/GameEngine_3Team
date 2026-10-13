@@ -1382,6 +1382,7 @@ GameObject:
   - component: {fileID: 1782949460}
   - component: {fileID: 1782949459}
   - component: {fileID: 1782949463}
+  - component: {fileID: 1782949464}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -1494,7 +1495,23 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Health
   maxHp: 10
   currentHp: 0
-  hpSlider: {fileID: 0}
+  hpSlider: {fileID: 1192980477}
+--- !u!114 &1782949464
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1782949458}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 76cd9323d07e2b644a111f1849b87956, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerShooter
+  bulletPrefab: {fileID: 2191280106723176605, guid: d96308d433473d247b86f16bf4dba774, type: 3}
+  firePoint: {fileID: 1199075483}
+  bulletSpeed: 20
+  fireCooldown: 0.2
 --- !u!4 &2018867430 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: dfc26d9679c5dc04496b3035390ae214, type: 3}
