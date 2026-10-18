@@ -10,6 +10,8 @@ public class PlayerController : MonoBehaviour
     public Transform cameraPivot;
     public Transform cameraTransform;
 
+    public Animator Animator;
+
     private Vector2 moveInput;
     private Vector2 lookInput;
     private bool isRunning;
@@ -44,6 +46,7 @@ public class PlayerController : MonoBehaviour
     {
         isRunning = value.isPressed;
     }
+    
     void Update()
     {
         transform.Rotate(0f, lookInput.x * mouseSensitivity, 0f);
@@ -72,6 +75,9 @@ public class PlayerController : MonoBehaviour
         Vector3 camPos = cameraTransform.localPosition;
         camPos.z = Mathf.Lerp(camPos.z, targetZ, 5f * Time.deltaTime);
         cameraTransform.localPosition = camPos;
+
+        float realSpeed = moveInput.magnitude * speed;
+        Animator.SetFloat("Speed", realSpeed, 0.1f, Time.deltaTime);
 
         controller.Move(move * Time.deltaTime);
     }
