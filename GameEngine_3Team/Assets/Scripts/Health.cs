@@ -1,24 +1,27 @@
+
 using UnityEngine;
 using UnityEngine.UI;
 
 public class Health : MonoBehaviour
 {
-    public int maxHp = 3;
+    public int maxHp = 10;
     public int currentHp;
-    public Slider hpSlider;      // 플레이어만 연결
+
+    public Image fillImage;
 
     public static int killCount;
 
-    public float invincibleTime = 0f;   // 플레이어는 0.5
-    float lastHitTime = -999f;
+    public float invincibleTime = 0.5f;
+    private float lastHitTime = -999f;
 
-    public GameObject dropPrefab;     // 적만 연결
+    public GameObject dropPrefab;
     public float dropChance = 0.3f;
 
     public GameObject hitEffect;
 
     void Start()
     {
+        maxHp = Mathf.Max(1, maxHp);
         currentHp = maxHp;
         UpdateBar();
     }
@@ -27,24 +30,41 @@ public class Health : MonoBehaviour
     {
         if (currentHp <= 0) return;
         if (Time.time < lastHitTime + invincibleTime) return;
-        lastHitTime = Time.time;
+        if (damage <= 0) return;
 
-        currentHp -= damage;
-        Debug.Log(name + " HP: " + currentHp);
+        lastHitTime = Time.time;
+        currentHp = Mathf.Max(0, currentHp - damage);
+
+        Debug.Log(name + " HP: " + currentHp + "/" + maxHp);
+
         UpdateBar();
 
         Vector3 hitPos = transform.position + Vector3.up;
-        if (hitEffect != null)
-            Instantiate(hitEffect, hitPos, Quaternion.identity);
 
-        if (currentHp <= 0) Die();
-        else Blink();
+        if (hitEffect != null)
+        {
+            Instantiate(hitEffect, hitPos, Quaternion.identity);
+        }
+
+        if (currentHp <= 0)
+        {
+            Die();
+        }
+        else
+        {
+            Blink();
+        }
     }
 
     void UpdateBar()
     {
-        if (hpSlider != null)
-            hpSlider.value = (float)currentHp / maxHp;
+        if (fillImage == null) return;
+
+        float hpRatio = (float)currentHp / maxHp;
+        fillImage.fillAmount = Mathf.Clamp01(hpRatio);
+
+        // 체력이 0이면 빨간 게이지를 완전히 숨김
+        fillImage.enabled = currentHp > 0;
     }
 
     void Die()
@@ -65,6 +85,7 @@ public class Health : MonoBehaviour
             Destroy(gameObject);
         }
     }
+
     void Blink()
     {
         SetVisible(false);
@@ -79,10 +100,15 @@ public class Health : MonoBehaviour
     void SetVisible(bool on)
     {
         foreach (Renderer r in GetComponentsInChildren<Renderer>())
+        {
             r.enabled = on;
+        }
     }
+
     public void Heal(int amount)
     {
+        if (currentHp <= 0) return;
+
         currentHp = Mathf.Min(currentHp + amount, maxHp);
         UpdateBar();
     }
